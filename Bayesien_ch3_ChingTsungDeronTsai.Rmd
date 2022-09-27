@@ -3,8 +3,8 @@ title: "Bayesian_HW1"
 author: "Ching-Tsung_Deron_Tsai"
 date: "2022/9/25"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -99,7 +99,6 @@ y = 57
 
 prior_as <- n0s %*% t(theta0s)
 prior_bs <- n0s %*% t((1-theta0s))
-
 post_prob <- matrix(nrow = length(n0s), ncol = length(theta0s))
 post_a <- prior_as + y
 post_b <- prior_bs + n - y
@@ -109,10 +108,8 @@ for (i in 1:length(n0s)){
     post_prob[i,j] <- 1-pbeta(w,post_a[i,j],post_b[i,j])
   }
 }
-
+contour(n0s,theta0s,post_prob)
 image.plot(n0s, theta0s,post_prob,xlab="n0",ylab="theta0",
-           main="p(theta > 0.5 | y)",col=heat.colors(100)[1:90])
-image.plot(prior_as, prior_bs,post_prob,xlab="a",ylab="b",
            main="p(theta > 0.5 | y)",col=heat.colors(100)[1:90])
 ```
 
@@ -223,12 +220,29 @@ The posterior mode is approximately `r mode`, which is closer to the mode of que
 
 **e**
 
-Let $p(\theta|y) = w_1*f_1(\theta|y) + (1-w_1)f_2(\theta|y)$
+Let $w * f_1(\theta|y)+ (1-w)f_2(\theta|y)$ where $ f_1(\theta|y) \sim Beta(17,36)$ and $f_2(\theta|y) \sim Beta(23,30)$ 
 
-I have no idea what to do next.
+$$
+p(\theta|y) \propto p(\theta)p(y|\theta) = w \frac{\Gamma(17+36)}{\Gamma(17)\Gamma(36)} + (1-w)\frac{\Gamma(23+30)}{\Gamma(23)\Gamma(30)}
+\\
+18\binom{43}{15}[3* \theta^{17-1}*(1-\theta)^{36-1}+\theta^{23-1} (1-\theta)^{30-1}] \\
+= 18*\frac{43!}{15! 28!}*3*\frac{16!35!}{52!}*\frac{\Gamma(17+36)}{\Gamma(17)\Gamma(36)}\theta^{17-1}*(1-\theta)^{36-1} \\
++ 18*\frac{43!}{15! 28!}*\frac{22!29!}{52!}*\frac{\Gamma(23+30)}{\Gamma(23)\Gamma(30)}*\theta^{23-1} (1-\theta)^{30-1} \\
+\frac{w}{1-w} = (3*16!35!)/(22!29!) \\
+w \approx 0.984
+$$
 
-3.9
+```{r q4e}
+# w/(1-w) = 
+x = 30*31*32*33*34*35/(22*21*20*19*6*17)
+w = x/(1+x)
+w
+```
 
+
+
+
+#### 3.9
 
 
 
